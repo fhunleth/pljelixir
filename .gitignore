@@ -1,0 +1,8 @@
+*.o
+moc_*
+*.pro.user
+deps
+src/Makefile
+src/console
+priv
+_build
