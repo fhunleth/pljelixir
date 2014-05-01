@@ -34,10 +34,10 @@ defmodule ConsoleServer do
     {:stop, :normal, state}
   end
 
-  def handle_info(info, state) do
-    IO.puts "In handle_info"
-    IO.inspect info
-    {:noreply, state}
+  def handle_info({_, {:data, message}}, state) do
+    msg = :erlang.binary_to_term(message)
+    IO.inspect msg
+    handle_port(msg, state)
   end
 
   # Private helper functions
@@ -49,6 +49,10 @@ defmodule ConsoleServer do
         {:ok, :erlang.binary_to_term(response)}
         _ -> :error
     end
+  end
+
+  defp handle_port({:input, input}, state) do
+    {:noreply, state}
   end
 
 end
