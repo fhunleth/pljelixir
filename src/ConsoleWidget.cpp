@@ -6,14 +6,30 @@
 ConsoleWidget::ConsoleWidget(QWidget *parent) :
     QTextEdit(parent)
 {
+    setStyleSheet("background-color: black; color: white");
+
+    rcFormat_.setBackground(Qt::black);
+    rcFormat_.setForeground(QColor(0xaa, 0x55, 0x00));
+
+    promptFormat_.setBackground(Qt::black);
+    promptFormat_.setForeground(Qt::white);
+
     prompt_ = ">>>";
-    printPrompt();
 }
 
-void ConsoleWidget::printPrompt()
+void ConsoleWidget::appendReturnCode(const QString &str)
 {
-    append(prompt_);
-    moveCursor(QTextCursor::End);
+    QTextCursor cursor = this->textCursor();
+    cursor.movePosition(QTextCursor::End);
+    cursor.insertText(str, rcFormat_);
+}
+
+void ConsoleWidget::prompt()
+{
+    QTextCursor cursor = this->textCursor();
+    cursor.movePosition(QTextCursor::End);
+    cursor.insertBlock();
+    cursor.insertText(prompt_, promptFormat_);
 
     promptBlockNumber_ = textCursor().blockNumber();
     promptColumnNumber_ = textCursor().columnNumber();
@@ -40,10 +56,8 @@ void ConsoleWidget::keyPressEvent(QKeyEvent *e)
         e->accept();
 
         if (isOnEditLine()) {
+            textCursor().insertBlock();
             emit inputReceived(currentCommand());
-
-            append(QString("Got: %1").arg(currentCommand()));
-            printPrompt();
         } else {
             // Move to the end.
             moveCursor(QTextCursor::End);
@@ -78,6 +92,8 @@ void ConsoleWidget::keyPressEvent(QKeyEvent *e)
     case Qt::Key_Up:
     case Qt::Key_Down:
     case Qt::Key_End:
+    case Qt::Key_PageDown:
+    case Qt::Key_PageUp:
         QTextEdit::keyPressEvent(e);
         break;
 

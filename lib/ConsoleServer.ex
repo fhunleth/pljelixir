@@ -1,7 +1,9 @@
 defmodule ConsoleServer do
   use GenServer.Behaviour
 
-  defrecord State, port: nil
+  defmodule State do
+    defstruct port: nil, bindings: []
+  end
 
   # Public API
   def start_link do
@@ -21,7 +23,8 @@ defmodule ConsoleServer do
     executable = :code.priv_dir(:console) ++ '/console'
     port = Port.open({:spawn_executable, executable},
     [{:packet, 2}, :use_stdio, :binary])
-    state = State.new(port: port)
+    state = %State{port: port}
+    cast_port(state, :prompt, [])
     { :ok, state }
   end
 
@@ -36,14 +39,17 @@ defmodule ConsoleServer do
 
   def handle_info({_, {:data, message}}, state) do
     msg = :erlang.binary_to_term(message)
-    IO.inspect msg
     handle_port(msg, state)
   end
 
   # Private helper functions
-  defp call_port(state, command, arguments) do
+  defp cast_port(state, command, arguments) do
     msg = {command, arguments}
     send state.port, {self, {:command, :erlang.term_to_binary(msg)}}
+  end
+
+  defp call_port(state, command, arguments) do
+    cast_port(state, command, arguments)
     receive do
       {_, {:data, response}} ->
         {:ok, :erlang.binary_to_term(response)}
@@ -52,7 +58,11 @@ defmodule ConsoleServer do
   end
 
   defp handle_port({:input, input}, state) do
-    {:noreply, state}
+    {rc, newbindings} = Code.eval_string(input, state.bindings)
+    newstate = %{state | bindings: newbindings}
+    cast_port(state, :rc, [inspect rc])
+    cast_port(state, :prompt, [])
+    {:noreply, newstate}
   end
 
 end

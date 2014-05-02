@@ -4,7 +4,8 @@
 #include <unistd.h>
 
 Erlcmd::Erlcmd(QObject *parent) :
-    QObject(parent)
+    QObject(parent),
+    index_(0)
 {
     erl_init(NULL, 0);
 

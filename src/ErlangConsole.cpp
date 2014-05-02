@@ -23,4 +23,34 @@ void ErlangConsole::handleInput(const QString &input)
 
 void ErlangConsole::handleMessage(ETERMPtr msg)
 {
+    ETERM *emsg = msg.data();
+
+    // Commands are of the form {Command, Arguments}:
+    // { atom(), [term()] }
+
+    ETERM *cmd = erl_element(1, emsg);
+    ETERM *args = erl_element(2, emsg);
+    if (cmd == NULL || args == NULL)
+        qFatal("Expecting { cmd, args }");
+
+    ETERM *resp = 0;
+    if (strcmp(ERL_ATOM_PTR(cmd), "rc") == 0) {
+        ETERM *erc = erl_hd(args);
+        if (erc == NULL || !ERL_IS_BINARY(erc))
+            qFatal("rc: didn't get string");
+
+        console_->appendReturnCode(QString::fromUtf8((const char *) ERL_BIN_PTR(erc), ERL_BIN_SIZE(erc)));
+    } else if (strcmp(ERL_ATOM_PTR(cmd), "prompt") == 0) {
+        console_->prompt();
+    } else {
+        resp = erl_format("error");
+    }
+
+    if (resp) {
+        cmdprocessor_->send(resp);
+        erl_free_term(resp);
+    }
+
+    erl_free_term(cmd);
+    erl_free_term(args);
 }
