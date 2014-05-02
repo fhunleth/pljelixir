@@ -58,11 +58,18 @@ defmodule ConsoleServer do
   end
 
   defp handle_port({:input, input}, state) do
-    {rc, newbindings} = Code.eval_string(input, state.bindings)
-    newstate = %{state | bindings: newbindings}
-    cast_port(state, :rc, [inspect rc])
-    cast_port(state, :prompt, [])
-    {:noreply, newstate}
+    try do
+      {rc, newbindings} = Code.eval_string(input, state.bindings)
+      newstate = %{state | bindings: newbindings}
+      cast_port(state, :rc, [inspect rc])
+      cast_port(state, :prompt, [])
+      {:noreply, newstate}
+    catch
+      kind, reason ->
+        cast_port(state, :error, ["** (#{kind}) #{inspect reason}"]) #  "(#{err}) #{msg}")
+        cast_port(state, :prompt, [])
+        {:noreply, state}
+    end
   end
 
 end

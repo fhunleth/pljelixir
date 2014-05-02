@@ -14,17 +14,27 @@ ConsoleWidget::ConsoleWidget(QWidget *parent) :
     promptFormat_.setBackground(Qt::black);
     promptFormat_.setForeground(Qt::white);
 
+    errorFormat_.setBackground(Qt::black);
+    errorFormat_.setForeground(Qt::red);
+
     prompt_ = ">>>";
 }
 
-void ConsoleWidget::appendReturnCode(const QString &str)
+void ConsoleWidget::printResult(const QString &str)
 {
     QTextCursor cursor = this->textCursor();
     cursor.movePosition(QTextCursor::End);
     cursor.insertText(str, rcFormat_);
 }
 
-void ConsoleWidget::prompt()
+void ConsoleWidget::printError(const QString &str)
+{
+    QTextCursor cursor = this->textCursor();
+    cursor.movePosition(QTextCursor::End);
+    cursor.insertText(str, errorFormat_);
+}
+
+void ConsoleWidget::printPrompt()
 {
     QTextCursor cursor = this->textCursor();
     cursor.movePosition(QTextCursor::End);
@@ -51,6 +61,14 @@ QString ConsoleWidget::currentCommand() const
 void ConsoleWidget::keyPressEvent(QKeyEvent *e)
 {
     switch (e->key()) {
+    case Qt::Key_F2:
+        zoomIn();
+        break;
+
+    case Qt::Key_F3:
+        zoomOut();
+        break;
+
     case Qt::Key_Return:
     case Qt::Key_Enter:
         e->accept();
