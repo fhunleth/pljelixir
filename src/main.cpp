@@ -1,18 +1,30 @@
 #include "MainWindow.h"
 #include <QApplication>
+#include <QWebView>
 
 #include "ErlangConsole.h"
 #include "ConsoleWidget.h"
+#include "SwitcherWidget.h"
+#include "SwitchHelper.h"
 
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
 
-    ConsoleWidget c;
-    ErlangConsole erlangConsole(&c);
+    QWebView *webView = new QWebView();
+    webView->setUrl(QUrl("file:///home/fhunleth/experiments/webtest/web/index.html"));
 
-    c.setMinimumSize(640, 480);
-    c.show();
+    ConsoleWidget *c = new ConsoleWidget();
+    ErlangConsole erlangConsole(c);
+
+    SwitcherWidget switcher;
+    switcher.addWidget(webView);
+    switcher.addWidget(c);
+    switcher.setMinimumSize(800, 600);
+    switcher.show();
+
+    SwitchHelper helper(&switcher);
+    a.installEventFilter(&helper);
     
     return a.exec();
 }

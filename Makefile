@@ -26,6 +26,7 @@ MIX ?= mix
 ERL_LIB = $(NERVES_SDK_SYSROOT)/usr/lib/erlang/lib
 ELX_LIB = $(NERVES_SDK_ROOT)/usr/lib/elixir/lib
 REL2FW = $(NERVES_ROOT)/scripts/rel2fw.sh
+QMAKE ?= qmake
 
 all: firmware
 
@@ -45,14 +46,14 @@ firmware: release
 	$(REL2FW) _rel
 
 src/Makefile:
-	cd src && qmake -after "target.path=../priv" console.pro
+	cd src && $(QMAKE) -after "target.path=../priv" console.pro
 
 compile_port: src/Makefile
 	+$(MAKE) -C src install
 
 clean:
 	$(MIX) clean; rm -fr _build _rel _images
-	[ -e src/Makefile ] && $(MAKE) -C src clean
+	[ -e src/Makefile ] && $(MAKE) -C src clean && rm src/Makefile
 
 distclean: clean
 	-rm -fr ebin deps 
