@@ -9,7 +9,7 @@ class ConsoleWidget : public QTextEdit
 public:
     explicit ConsoleWidget(QWidget *parent = 0);
 
-    void printPrompt();
+    void printPrompt(bool isContinuation = false);
 
     void printResult(const QString &str);
     void printError(const QString &str);
@@ -25,6 +25,7 @@ private:
 
 private:
     QString prompt_;
+    QString continuationPrompt_;
 
     int promptBlockNumber_;
     int promptColumnNumber_;

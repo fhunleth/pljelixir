@@ -46,14 +46,15 @@ firmware: release
 	$(REL2FW) _rel
 
 src/Makefile:
-	cd src && $(QMAKE) -after "target.path=../priv" console.pro
+	cd src && $(QMAKE) -after "target.path=../priv" "LIBS+=-L$(ERL_EI_LIBDIR)" "INCLUDEPATH+=$(EILOC)" console.pro
 
 compile_port: src/Makefile
 	+$(MAKE) -C src install
 
 clean:
-	$(MIX) clean; rm -fr _build _rel _images
-	[ -e src/Makefile ] && $(MAKE) -C src clean && rm src/Makefile
+	[ ! -e src/Makefile ] || $(MAKE) -C src clean
+	$(MIX) clean 
+	-rm -fr _build _rel _images src/Makefile
 
 distclean: clean
 	-rm -fr ebin deps 

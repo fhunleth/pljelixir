@@ -1,9 +1,12 @@
 #include "ErlangConsole.h"
 #include "ConsoleWidget.h"
 
-ErlangConsole::ErlangConsole(ConsoleWidget *console, QObject *parent) :
+#include <QWebView>
+
+ErlangConsole::ErlangConsole(ConsoleWidget *console, QWebView *webView, QObject *parent) :
     QObject(parent),
-    console_(console)
+    console_(console),
+    webView_(webView)
 {
     cmdprocessor_ = new Erlcmd(this);
     connect(cmdprocessor_, SIGNAL(messageReceived(ETERMPtr)), SLOT(handleMessage(ETERMPtr)));
@@ -48,6 +51,13 @@ void ErlangConsole::handleMessage(ETERMPtr msg)
             qFatal("error: didn't get string");
 
         console_->printError(QString::fromUtf8((const char *) ERL_BIN_PTR(erc), ERL_BIN_SIZE(erc)));
+    } else if (strcmp(ERL_ATOM_PTR(cmd), "set_url") == 0) {
+        ETERM *eurl = erl_hd(args);
+        if (eurl == NULL || !ERL_IS_BINARY(eurl))
+            qFatal("error: didn't get url");
+
+        QUrl url(QString::fromUtf8((const char *) ERL_BIN_PTR(eurl), ERL_BIN_SIZE(eurl)));
+        webView_->setUrl(url);
     } else {
         resp = erl_format("error");
     }

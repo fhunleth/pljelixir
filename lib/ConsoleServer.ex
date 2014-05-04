@@ -14,8 +14,8 @@ defmodule ConsoleServer do
     :gen_server.cast __MODULE__, :stop
   end
 
-  def ping() do
-    :gen_server.call __MODULE__, :ping
+  def set_url(url) do
+    :gen_server.cast __MODULE__, {:set_url, url}
   end
 
   # gen_server callbacks
@@ -33,6 +33,10 @@ defmodule ConsoleServer do
     {:reply, response, state }
   end
 
+  def handle_cast({:set_url, url}, state) do
+    cast_port(state, :set_url, [url])
+    {:noreply, state}
+  end
   def handle_cast(:stop, state) do
     {:stop, :normal, state}
   end

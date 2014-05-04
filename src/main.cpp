@@ -15,7 +15,7 @@ int main(int argc, char *argv[])
     webView->setUrl(QUrl("file:///home/fhunleth/experiments/webtest/web/index.html"));
 
     ConsoleWidget *c = new ConsoleWidget();
-    ErlangConsole erlangConsole(c);
+    ErlangConsole erlangConsole(c, webView);
 
     SwitcherWidget switcher;
     switcher.addWidget(webView);
@@ -25,6 +25,9 @@ int main(int argc, char *argv[])
 
     SwitchHelper helper(&switcher);
     a.installEventFilter(&helper);
-    
+
+    // On EGL,
+    switcher.setFocus();
+
     return a.exec();
 }

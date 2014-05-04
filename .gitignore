@@ -4,5 +4,5 @@ moc_*
 deps
 src/Makefile
 src/console
-priv
+priv/console
 _build

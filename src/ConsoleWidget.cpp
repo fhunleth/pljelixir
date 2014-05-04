@@ -17,7 +17,8 @@ ConsoleWidget::ConsoleWidget(QWidget *parent) :
     errorFormat_.setBackground(Qt::black);
     errorFormat_.setForeground(Qt::red);
 
-    prompt_ = ">>>";
+    prompt_ = "iex> ";
+    continuationPrompt_ = "...> ";
 }
 
 void ConsoleWidget::printResult(const QString &str)
@@ -34,12 +35,13 @@ void ConsoleWidget::printError(const QString &str)
     cursor.insertText(str, errorFormat_);
 }
 
-void ConsoleWidget::printPrompt()
+void ConsoleWidget::printPrompt(bool isContinuation)
 {
     QTextCursor cursor = this->textCursor();
     cursor.movePosition(QTextCursor::End);
     cursor.insertBlock();
-    cursor.insertText(prompt_, promptFormat_);
+    cursor.insertText(isContinuation ? continuationPrompt_ : prompt_, promptFormat_);
+    ensureCursorVisible();
 
     promptBlockNumber_ = textCursor().blockNumber();
     promptColumnNumber_ = textCursor().columnNumber();
@@ -105,6 +107,11 @@ void ConsoleWidget::keyPressEvent(QKeyEvent *e)
         }
         break;
 
+        // Navigation and selection keys to pass on to QTextEdit
+    case Qt::Key_Insert:
+    case Qt::Key_Alt:
+    case Qt::Key_Shift:
+    case Qt::Key_Control:
     case Qt::Key_Left:
     case Qt::Key_Right:
     case Qt::Key_Up:
