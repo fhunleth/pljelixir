@@ -9,10 +9,12 @@ class ConsoleWidget : public QTextEdit
 public:
     explicit ConsoleWidget(QWidget *parent = 0);
 
-    void printPrompt(bool isContinuation = false);
+    void printPrompt();
 
     void printResult(const QString &str);
     void printError(const QString &str);
+
+    void reset();
 signals:
     void inputReceived(QString);
 
@@ -34,6 +36,8 @@ private:
     QTextCharFormat promptFormat_;
     QTextCharFormat rcFormat_;
     QTextCharFormat errorFormat_;
+
+    QString command_;
 };
 
 #endif // CONSOLEWIDGET_H

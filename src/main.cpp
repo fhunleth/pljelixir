@@ -7,6 +7,9 @@
 #include "SwitcherWidget.h"
 #include "SwitchHelper.h"
 
+// Uncomment to test standalone (i.e. not being called from Erlang)
+//#define TEST
+
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
@@ -15,7 +18,11 @@ int main(int argc, char *argv[])
     webView->setUrl(QUrl("file:///home/fhunleth/experiments/webtest/web/index.html"));
 
     ConsoleWidget *c = new ConsoleWidget();
+#ifdef TEST
+    c->printPrompt();
+#else
     ErlangConsole erlangConsole(c, webView);
+#endif
 
     SwitcherWidget switcher;
     switcher.addWidget(webView);

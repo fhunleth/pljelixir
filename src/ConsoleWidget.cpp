@@ -6,7 +6,7 @@
 ConsoleWidget::ConsoleWidget(QWidget *parent) :
     QTextEdit(parent)
 {
-    setStyleSheet("background-color: black; color: white");
+    setStyleSheet("background-color: black; color: white; font-family: DejaVu Sans Mono");
 
     rcFormat_.setBackground(Qt::black);
     rcFormat_.setForeground(QColor(0xaa, 0x55, 0x00));
@@ -35,12 +35,20 @@ void ConsoleWidget::printError(const QString &str)
     cursor.insertText(str, errorFormat_);
 }
 
-void ConsoleWidget::printPrompt(bool isContinuation)
+void ConsoleWidget::reset()
+{
+    // Hack to reset the terminal
+    printError("^C");
+    command_.clear();
+    printPrompt();
+}
+
+void ConsoleWidget::printPrompt()
 {
     QTextCursor cursor = this->textCursor();
     cursor.movePosition(QTextCursor::End);
     cursor.insertBlock();
-    cursor.insertText(isContinuation ? continuationPrompt_ : prompt_, promptFormat_);
+    cursor.insertText(command_.isEmpty() ? prompt_ : continuationPrompt_, promptFormat_);
     ensureCursorVisible();
 
     promptBlockNumber_ = textCursor().blockNumber();
@@ -76,8 +84,14 @@ void ConsoleWidget::keyPressEvent(QKeyEvent *e)
         e->accept();
 
         if (isOnEditLine()) {
-            textCursor().insertBlock();
-            emit inputReceived(currentCommand());
+            command_.append(currentCommand());
+            if (e->modifiers() & Qt::ControlModifier) {
+                // Ctrl-Enter sends to command to Elixir
+                emit inputReceived(command_);
+                command_.clear();
+                textCursor().insertBlock();
+            } else
+                printPrompt();
         } else {
             // Move to the end.
             moveCursor(QTextCursor::End);
@@ -132,6 +146,13 @@ void ConsoleWidget::keyPressEvent(QKeyEvent *e)
             moveCursor(QTextCursor::StartOfLine);
         break;
 
+    case Qt::Key_C:
+        if (e->modifiers() & Qt::ControlModifier) {
+            reset();
+            e->accept();
+            break;
+        }
+        // else fall through
     default:
         if (isOnEditLine())
             QTextEdit::keyPressEvent(e);
