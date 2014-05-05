@@ -1,4 +1,4 @@
-defmodule Mix.Tasks.Compile.Console do
+defmodule Mix.Tasks.Compile.Pljelixir do
   @shortdoc "Compiles C code"
 
   def run(_) do
@@ -6,14 +6,14 @@ defmodule Mix.Tasks.Compile.Console do
   end
 end
 
-defmodule Console.Mixfile do
+defmodule Pljelixir.Mixfile do
   use Mix.Project
 
   def project do
-    [app: :console,
+    [app: :pljelixir,
      version: "0.0.1",
      elixir: "~> 0.13.0",
-     compilers: [:Console, :elixir, :app],
+     compilers: [:Pljelixir, :elixir, :app],
      deps: deps]
   end
 
@@ -22,7 +22,7 @@ defmodule Console.Mixfile do
   # Type `mix help compile.app` for more information
   def application do
     [ applications: [],
-      mod: { Console, [] } ]
+      mod: { Pljelixir, [] } ]
   end
 
   # List all dependencies in the format:

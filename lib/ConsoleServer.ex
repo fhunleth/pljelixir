@@ -18,19 +18,19 @@ defmodule ConsoleServer do
     :gen_server.cast __MODULE__, {:set_url, url}
   end
 
+  def goto_home do
+    set_url(home())
+  end
+
   # gen_server callbacks
   def init(_args) do
-    executable = :code.priv_dir(:console) ++ '/console'
+    executable = :code.priv_dir(:pljelixir) ++ '/console'
     port = Port.open({:spawn_executable, executable},
     [{:packet, 2}, :use_stdio, :binary])
     state = %State{port: port}
     cast_port(state, :prompt, [])
+    cast_port(state, :set_url, [home()])
     { :ok, state }
-  end
-
-  def handle_call(:ping, _from, state) do
-    {:ok, response} = call_port(state, :output, ["hello"])
-    {:reply, response, state }
   end
 
   def handle_cast({:set_url, url}, state) do
@@ -74,6 +74,10 @@ defmodule ConsoleServer do
         cast_port(state, :prompt, [])
         {:noreply, state}
     end
+  end
+
+  defp home do
+    list_to_bitstring('file://' ++ :code.priv_dir(:pljelixir) ++ '/html/index.html')
   end
 
 end

@@ -11,6 +11,7 @@ public:
 
     void addWidget(QWidget *child);
     void toggle();
+    void forceFocus();
 
 protected:
     void resizeEvent(QResizeEvent *);

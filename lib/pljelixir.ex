@@ -1,9 +1,9 @@
-defmodule Console do
+defmodule Pljelixir do
   use Application.Behaviour
 
   # See http://elixir-lang.org/docs/stable/Application.Behaviour.html
   # for more information on OTP Applications
   def start(_type, _args) do
-    Console.Supervisor.start_link
+    Pljelixir.Supervisor.start_link
   end
 end

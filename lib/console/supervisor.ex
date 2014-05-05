@@ -1,4 +1,4 @@
-defmodule Console.Supervisor do
+defmodule Pljelixir.Supervisor do
   use Supervisor.Behaviour
 
   def start_link do
@@ -8,7 +8,7 @@ defmodule Console.Supervisor do
   def init([]) do
     children = [
       # Define workers and child supervisors to be supervised
-      # worker(Console.Worker, [arg1, arg2, arg3])
+      worker(ConsoleServer, [])
     ]
 
     # See http://elixir-lang.org/docs/stable/Supervisor.Behaviour.html

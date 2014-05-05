@@ -3,19 +3,21 @@
 
 #include <QObject>
 
+class QWebView;
 class SwitcherWidget;
 
-class SwitchHelper : public QObject
+class KeyHandler : public QObject
 {
     Q_OBJECT
 public:
-    explicit SwitchHelper(SwitcherWidget *switcher, QObject *parent = 0);
+    explicit KeyHandler(SwitcherWidget *switcher, QWebView *webView, QObject *parent = 0);
 
 protected:
     bool eventFilter(QObject *, QEvent *);
 
 private:
     SwitcherWidget *switcher_;
+    QWebView *webView_;
 };
 
 #endif // SWITCHHELPER_H

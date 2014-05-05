@@ -6,19 +6,18 @@ TARGET = console
 TEMPLATE = app
 
 SOURCES += main.cpp\
-        MainWindow.cpp \
     Erlcmd.cpp \
     ErlangConsole.cpp \
     ConsoleWidget.cpp \
     SwitcherWidget.cpp \
-    SwitchHelper.cpp
+    KeyHandler.cpp
 
-HEADERS  += MainWindow.h \
+HEADERS  += \
     Erlcmd.h \
     ErlangConsole.h \
     ConsoleWidget.h \
     SwitcherWidget.h \
-    SwitchHelper.h
+    KeyHandler.h
 
 FORMS    +=
 
