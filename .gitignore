@@ -6,3 +6,5 @@ src/Makefile
 src/console
 priv/console
 _build
+_images
+_rel
