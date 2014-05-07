@@ -17,6 +17,12 @@ signals:
 protected:
     void keyPressEvent(QKeyEvent *e);
 
+    // Consume mouse events since the user isn't supposed
+    // to be able to move the cursor.
+    void mousePressEvent(QMouseEvent *e);
+    void mouseReleaseEvent(QMouseEvent *e);
+    void mouseDoubleClickEvent(QMouseEvent *e);
+
 private slots:
     void dataReceived(const QByteArray &data);
     void error();

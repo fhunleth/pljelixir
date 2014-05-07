@@ -3,6 +3,8 @@
 
 #include <QKeyEvent>
 #include <QTextBlock>
+#include <QScrollBar>
+
 #include <ctype.h>
 
 ConsoleWidget::ConsoleWidget(QWidget *parent) :
@@ -19,6 +21,8 @@ ConsoleWidget::ConsoleWidget(QWidget *parent) :
     connect(client_, SIGNAL(error()), SLOT(error()));
 
     client_->attach("/tmp/myiex");
+
+    setOverwriteMode(true);
 }
 
 void ConsoleWidget::dataReceived(const QByteArray &data)
@@ -53,12 +57,13 @@ void ConsoleWidget::error()
 void ConsoleWidget::flushBuffer()
 {
     if (!buffer_.isEmpty()) {
+
         QTextCharFormat format;
         format.setBackground(ansiToColor(inverse_ ? ansiFg_ : ansiBg_));
         format.setForeground(ansiToColor(inverse_ ? ansiBg_ : ansiFg_));
 
         QString text = QString::fromUtf8(buffer_);
-        QTextCursor cursor = this->textCursor();
+        QTextCursor cursor = textCursor();
         for (int i = 0; i < text.length(); i++) {
             QChar c = text.at(i);
             switch (c.unicode()) {
@@ -66,15 +71,29 @@ void ConsoleWidget::flushBuffer()
                 break;
 
             case '\b':
-                cursor.deletePreviousChar();
+                cursor.movePosition(QTextCursor::Left);
+                break;
+
+            case '\r':
+                cursor.movePosition(QTextCursor::StartOfLine);
+                break;
+
+            case '\n':
+                cursor.movePosition(QTextCursor::EndOfBlock);
+                cursor.insertBlock();
                 break;
 
             default:
-//                qDebug("Insert: %c", c.unicode());
+                //if (!isprint(c.unicode()))
+                if (!cursor.atBlockEnd())
+                    cursor.deleteChar();
+
+//                qDebug("Not printable: %d (%s)", c.unicode(), QString(c).toUtf8().constData());
                 cursor.insertText(QString(c), format);
                 break;
             }
         }
+        setTextCursor(cursor);
         buffer_.clear();
     }
 }
@@ -97,19 +116,32 @@ bool ConsoleWidget::processEscapeSequence(const QByteArray &seq)
     int num[maxNumbers] = {0};
     int numCount = 0;
 
+    bool gotDigit = false;
     for (int i = 2; i < seq.length() && numCount < maxNumbers; i++) {
         char c = seq.at(i);
-        if (isdigit(c))
+        if (isdigit(c)) {
             num[numCount] = num[numCount] * 10 + (c - '0');
-        else
-            numCount++;
+            gotDigit = true;
+        } else {
+            if (gotDigit)
+                numCount++;
+            gotDigit = false;
+        }
     }
 
-    qDebug("%s: %c(%d): %d %d %d %d %d", seq.mid(1).constData(), cmd, numCount, num[0], num[1], num[2], num[3], num[4]);
+    QTextCursor cursor = textCursor();
     switch (cmd) {
+    case 'C':
+        cursor.movePosition(QTextCursor::Right, QTextCursor::MoveAnchor, numCount == 0 ? 1 : num[0]);
+        break;
+    case 'D':
+        cursor.movePosition(QTextCursor::Left, QTextCursor::MoveAnchor, numCount == 0 ? 1 : num[0]);
+        break;
     case 'm':
-        if (numCount != 1)
+        if (numCount != 1) {
+            qDebug("%s: %c(%d): %d %d %d %d %d", seq.mid(1).constData(), cmd, numCount, num[0], num[1], num[2], num[3], num[4]);
             break;
+        }
 
         switch (num[0]) {
         case 0:
@@ -155,13 +187,19 @@ bool ConsoleWidget::processEscapeSequence(const QByteArray &seq)
         case 47:
             ansiBg_ = num[0] - 30 + (ansiBg_ < 8 ?  0 : 8);
             break;
-        }
 
+        default:
+            qDebug("%s: %c(%d): %d %d %d %d %d", seq.mid(1).constData(), cmd, numCount, num[0], num[1], num[2], num[3], num[4]);
+            break;
+        }
         break;
 
     default:
+        qDebug("%s: %c(%d): %d %d %d %d %d", seq.mid(1).constData(), cmd, numCount, num[0], num[1], num[2], num[3], num[4]);
         break;
     }
+
+    setTextCursor(cursor);
     return true;
 }
 
@@ -214,6 +252,24 @@ void ConsoleWidget::keyPressEvent(QKeyEvent *e)
     case Qt::Key_Left:
         ansi = "\e[D";
         break;
+    case Qt::Key_Delete:
+        ansi = "\e[C\b"; // HACK! "\e[3~" doesn't work
+        break;
+    case Qt::Key_Home:
+        ansi = "\eOH";
+        break;
+    case Qt::Key_End:
+        ansi = "\eOF";
+        break;
+
+    case Qt::Key_PageUp:
+        verticalScrollBar()->setValue(verticalScrollBar()->value() - verticalScrollBar()->pageStep());
+        break;
+
+    case Qt::Key_PageDown:
+        verticalScrollBar()->setValue(verticalScrollBar()->value() + verticalScrollBar()->pageStep());
+        break;
+
     default:
         ansi = e->text().toUtf8();
         break;
@@ -308,5 +364,20 @@ void ConsoleWidget::keyPressEvent(QKeyEvent *e)
         break;
 
 #endif
+}
+
+void ConsoleWidget::mousePressEvent(QMouseEvent *e)
+{
+    e->accept();
+}
+
+void ConsoleWidget::mouseReleaseEvent(QMouseEvent *e)
+{
+    e->accept();
+}
+
+void ConsoleWidget::mouseDoubleClickEvent(QMouseEvent *e)
+{
+    e->accept();
 }
 

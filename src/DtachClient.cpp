@@ -75,6 +75,11 @@ void DtachClient::connected()
     packet pkt;
     pkt.type = MSG_ATTACH;
     socket_->write((const char *) &pkt, sizeof(pkt));
+
+    /* We would like a redraw, too. */
+    pkt.type = MSG_REDRAW;
+    pkt.len = REDRAW_CTRL_L;
+    socket_->write((const char *) &pkt, sizeof(pkt));
 }
 
 void DtachClient::readyRead()
