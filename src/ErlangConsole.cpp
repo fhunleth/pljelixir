@@ -42,15 +42,15 @@ void ErlangConsole::handleMessage(ETERMPtr msg)
         if (erc == NULL || !ERL_IS_BINARY(erc))
             qFatal("rc: didn't get string");
 
-        console_->printResult(QString::fromUtf8((const char *) ERL_BIN_PTR(erc), ERL_BIN_SIZE(erc)));
+        //console_->printResult(QString::fromUtf8((const char *) ERL_BIN_PTR(erc), ERL_BIN_SIZE(erc)));
     } else if (strcmp(ERL_ATOM_PTR(cmd), "prompt") == 0) {
-        console_->printPrompt();
+        //console_->printPrompt();
     } else if (strcmp(ERL_ATOM_PTR(cmd), "error") == 0) {
         ETERM *erc = erl_hd(args);
         if (erc == NULL || !ERL_IS_BINARY(erc))
             qFatal("error: didn't get string");
 
-        console_->printError(QString::fromUtf8((const char *) ERL_BIN_PTR(erc), ERL_BIN_SIZE(erc)));
+        //console_->printError(QString::fromUtf8((const char *) ERL_BIN_PTR(erc), ERL_BIN_SIZE(erc)));
     } else if (strcmp(ERL_ATOM_PTR(cmd), "set_url") == 0) {
         ETERM *eurl = erl_hd(args);
         if (eurl == NULL || !ERL_IS_BINARY(eurl))

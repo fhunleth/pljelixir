@@ -10,14 +10,16 @@ SOURCES += main.cpp\
     ErlangConsole.cpp \
     ConsoleWidget.cpp \
     SwitcherWidget.cpp \
-    KeyHandler.cpp
+    KeyHandler.cpp \
+    DtachClient.cpp
 
 HEADERS  += \
     Erlcmd.h \
     ErlangConsole.h \
     ConsoleWidget.h \
     SwitcherWidget.h \
-    KeyHandler.h
+    KeyHandler.h \
+    DtachClient.h
 
 FORMS    +=
 

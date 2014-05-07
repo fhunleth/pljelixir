@@ -3,41 +3,38 @@
 
 #include <QTextEdit>
 
+class DtachClient;
+
 class ConsoleWidget : public QTextEdit
 {
     Q_OBJECT
 public:
     explicit ConsoleWidget(QWidget *parent = 0);
 
-    void printPrompt();
-
-    void printResult(const QString &str);
-    void printError(const QString &str);
-
-    void reset();
 signals:
     void inputReceived(QString);
 
 protected:
     void keyPressEvent(QKeyEvent *e);
 
-private:
-    bool isOnEditLine() const;
-    QString currentCommand() const;
+private slots:
+    void dataReceived(const QByteArray &data);
+    void error();
 
 private:
-    QString prompt_;
-    QString continuationPrompt_;
+    void flushBuffer();
+    bool processEscapeSequence(const QByteArray &seq);
+    static QColor ansiToColor(int code);
 
-    int promptBlockNumber_;
-    int promptColumnNumber_;
-    int promptPosition_;
+private:
+    DtachClient *client_;
 
-    QTextCharFormat promptFormat_;
-    QTextCharFormat rcFormat_;
-    QTextCharFormat errorFormat_;
+    int ansiFg_;
+    int ansiBg_;
+    bool inverse_;
 
-    QString command_;
+    QByteArray escapeSequence_;
+    QByteArray buffer_;
 };
 
 #endif // CONSOLEWIDGET_H

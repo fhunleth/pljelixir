@@ -5,6 +5,7 @@
 
 class QWebView;
 class SwitcherWidget;
+class DtachClient;
 
 class KeyHandler : public QObject
 {
@@ -18,6 +19,7 @@ protected:
 private:
     SwitcherWidget *switcher_;
     QWebView *webView_;
+    DtachClient *client_;
 };
 
 #endif // SWITCHHELPER_H

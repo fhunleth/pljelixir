@@ -5,9 +5,10 @@
 #include "ConsoleWidget.h"
 #include "SwitcherWidget.h"
 #include "KeyHandler.h"
+#include "DtachClient.h"
 
 // Uncomment to test standalone (i.e. not being called from Erlang)
-//#define TEST
+#define TEST
 
 int main(int argc, char *argv[])
 {
@@ -18,7 +19,8 @@ int main(int argc, char *argv[])
     ConsoleWidget *c = new ConsoleWidget();
 #ifdef TEST
     webView->setUrl(QUrl("file:///home/fhunleth/experiments/webtest/web/index.html"));
-    c->printPrompt();
+
+//    c->printPrompt();
 #else
     ErlangConsole erlangConsole(c, webView);
 #endif

@@ -1,5 +1,6 @@
 #include "KeyHandler.h"
 #include "SwitcherWidget.h"
+
 #include <QKeyEvent>
 #include <QWebView>
 
