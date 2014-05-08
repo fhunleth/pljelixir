@@ -271,7 +271,13 @@ void ConsoleWidget::keyPressEvent(QKeyEvent *e)
         break;
 
     default:
-        ansi = e->text().toUtf8();
+        if (e->modifiers() == Qt::ControlModifier &&
+                e->key() >= Qt::Key_A &&
+                e->key() <= Qt::Key_Z) {
+            char code = (char) (e->key() - Qt::Key_A + 1);
+            ansi.append(code);
+        } else
+            ansi = e->text().toUtf8();
         break;
     }
 
