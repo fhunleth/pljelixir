@@ -15,7 +15,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
     <link rel="stylesheet" href="css/reveal.min.css">
-    <link rel="stylesheet" href="css/theme/moon.css" id="theme">
+    <link rel="stylesheet" href="css/theme/simple.css" id="theme">
 
     <!-- For syntax highlighting -->
     <link rel="stylesheet" href="lib/css/zenburn.css">
@@ -45,12 +45,14 @@
     <section>
         <h2>Controls</h2>
         <p>
-            F1 - Toggle between presentation and IEX<br/>
-            F2 - Enlarge IEx font size<br/>
-            F3 - Reduce IEx font size<br/>
-            F5 - Reload presentation<br/>
-            Right arrow - Next slide<br/>
-            Left arrow - Previous slide
+        <ul>
+            <li>F1 - Toggle between presentation and IEx</li>
+            <li>F2 - Enlarge IEx font size</li>
+            <li>F3 - Reduce IEx font size</li>
+            <li>F5 - Reload presentation</li>
+            <li>Right arrow - Next slide</li>
+            <li>Left arrow - Previous slide</li>
+        </ul>
         </p>
         <p>
             Note: if focus is lost in the presentation, hit F5
@@ -187,11 +189,11 @@ iex> %{mymap | :apple => 0}
     </section>
 
     <section>
-        <h2>Bigger Dictionaries</h2>
-        <ul><li>Maps and keyword lists implement the <code>Dict</code> interface</li>
+        <h2>The Dict interface</h2>
+        <ul><li>All dictionary-like things implement the <code>Dict</code> interface</li>
+            <li>Works for keyword lists and maps</li>
             <li><code>HashDict</code> also implements the interface and supports bigger dictionaries</li></ul>
         <pre><code data-trim>
-# HashDict is a type of dictionary
 iex> d = HashDict.new()
 #HashDict<[]>
 
@@ -206,123 +208,188 @@ iex> Dict.get(d, :apple)
         </code></pre>
     </section>
 
-<section>
-        <h2>Slides</h2>
-        <p>
-                Not a coder? No problem. There's a fully-featured visual editor for authoring these, try it out at <a href="http://slid.es" target="_blank">http://slid.es</a>.
-        </p>
-</section>
-
-<section>
-        <h2>Point of View</h2>
-        <p>
-                Press <strong>ESC</strong> to enter the slide overview.
-        </p>
-        <p>
-                Hold down alt and click on any element to zoom in on it using <a href="http://lab.hakim.se/zoom-js">zoom.js</a>. Alt + click anywhere to zoom back out.
-        </p>
-</section>
-
-<section>
-        <h2>Works in Mobile Safari</h2>
-        <p>
-                Try it out! You can swipe through the slides and pinch your way to the overview.
-        </p>
-</section>
-
-<section>
-        <h2>Marvelous Unordered List</h2>
-        <ul>
-                <li>No order here</li>
-                <li>Or here</li>
-                <li>Or here</li>
-                <li>Or here</li>
+    <section>
+        <h2>defstruct</h2>
+        <ul><li>Key-value data structure</li>
+            <li>Efficient representation and operation</li>
+            <li>Compile-time checked structures (new)</li>
+            <li>Used for polymorphism in Elixir (new)</li>
         </ul>
-</section>
+    </section>
+    <section>
+        <h2>defstruct</h2>
+        <pre><code data-trim>
+iex> defmodule Person do
+...>   defstruct name: nil, age: 0
+...> end
+{:module, Person, <<70, 79, 82, 49, 0, 0, 4, ...>>, {:__struct__, 0}}
 
-<section>
-        <h2>Fantastic Ordered List</h2>
-        <ol>
-                <li>One is smaller than...</li>
-                <li>Two is smaller than...</li>
-                <li>Three!</li>
-        </ol>
-</section>
+iex> me = %Person{name: "Frank"}
+%Person{age: 0, name: "Frank"}
 
-<section data-markdown>
-        <script type="text/template">
-                ## Markdown support
+iex> me.__struct__
+Person
 
-                For those of you who like that sort of thing. Instructions and a bit more info available [here](https://github.com/hakimel/reveal.js#markdown).
+iex> me.name
+"Frank"
 
-                ```
-                <section data-markdown>
-                  ## Markdown support
-
-                  For those of you who like that sort of thing.
-                  Instructions and a bit more info available [here](https://github.com/hakimel/reveal.js#markdown).
-                </section>
-                ```
-        </script>
-</section>
-
-<section id="transitions">
-        <h2>Transition Styles</h2>
-        <p>
-                You can select from different transitions, like: <br>
-                <a href="?transition=cube#/transitions">Cube</a> -
-                <a href="?transition=page#/transitions">Page</a> -
-                <a href="?transition=concave#/transitions">Concave</a> -
-                <a href="?transition=zoom#/transitions">Zoom</a> -
-                <a href="?transition=linear#/transitions">Linear</a> -
-                <a href="?transition=fade#/transitions">Fade</a> -
-                <a href="?transition=none#/transitions">None</a> -
-                <a href="?#/transitions">Default</a>
-        </p>
-</section>
-
-<section id="themes">
-        <h2>Themes</h2>
-        <p>
-                Reveal.js comes with a few themes built in: <br>
-                <a href="?#/themes">Default</a> -
-                <a href="?theme=sky#/themes">Sky</a> -
-                <a href="?theme=beige#/themes">Beige</a> -
-                <a href="?theme=simple#/themes">Simple</a> -
-                <a href="?theme=serif#/themes">Serif</a> -
-                <a href="?theme=night#/themes">Night</a> <br>
-                <a href="?theme=moon#/themes">Moon</a> -
-                <a href="?theme=solarized#/themes">Solarized</a>
-        </p>
-        <p>
-                <small>
-                        * Theme demos are loaded after the presentation which leads to flicker. In production you should load your theme in the <code>&lt;head&gt;</code> using a <code>&lt;link&gt;</code>.
-                </small>
-        </p>
-</section>
-
-<section>
-        <h2>Global State</h2>
-        <p>
-                Set <code>data-state="something"</code> on a slide and <code>"something"</code>
-                will be added as a class to the document element when the slide is open. This lets you
-                apply broader style changes, like switching the background.
-        </p>
-</section>
-
-<section data-state="customevent">
-        <h2>Custom Events</h2>
-        <p>
-                Additionally custom events can be triggered on a per slide basis by binding to the <code>data-state</code> name.
-        </p>
-        <pre><code data-trim contenteditable style="font-size: 18px; margin-top: 20px;">
-Reveal.addEventListener( 'customevent', function() {
-console.log( '"customevent" has fired' );
-} );
+iex> me = %{me | :age => 39}
+%Person{age: 39, name: "Frank"}
         </code></pre>
+    </section>
+
+<section>
+        <h2>Functions</h2>
+        <pre><code data-trim>
+iex> defmodule Greeter do
+...>   def hi(name) do
+...>     IO.puts("Hello, #{name}!")
+...>   end
+...> end
+{:module, Greeter,
+ <<70, 79, 82, 49, 0, 0, 5, 52, 66, 69, 65, 77, 65, 116, 111, ...>>,
+ {:hi, 1}}
+
+iex> Greeter.hi("Frank")
+Hello, Frank!
+:ok
+
+iex> Greeter.hi "Frank"
+Hello, Frank!
+:ok
+</code></pre>
 </section>
 
+<section>
+        <h2>The Best Function in the World</h2>
+        <pre><code data-trim>
+iex> h
 
+                                  IEx.Helpers
+
+Welcome to Interactive Elixir. You are currently seeing the documentation
+for the module IEx.Helpers which provides many helpers to make Elixir's
+shell more joyful to work with.
+
+This message was triggered by invoking the helper h(), usually referred to
+as h/0 (since it expects 0 arguments).
+
+There are many other helpers available:
+...
+</code></pre>
+</section>
+
+<section>
+        <h2>Writing your own docs</h2>
+        <pre><code>
+iex> defmodule Greeter do
+...>   @moduledoc "This is the Greeter module!"
+...>   @doc "Say hi"
+...>   def hi(name) do
+...>     IO.puts "Hello, #{name}"
+...>   end
+...> end
+{:module, Greeter, <<70, 79, 82, 49, 0, 0, 5, 104, 66, ...>>, {:hi, 1}}
+
+iex> h Greeter.hi
+
+                                  def_hi(name)
+
+Say hi
+</code></pre>
+</section>
+
+<section>
+        <h2>Pattern Matching</h2>
+        <ul>
+        <li>The <code>=</code> means <i>match</i></li>
+        <li>Elixir tries to make both sides of <code>=</code> match</li>
+        <li>Variables can be rebound</li>
+        <pre><code data-trim>
+iex> {x, y} = {1,2}
+{1, 2}
+
+iex> x
+1
+
+iex> y
+2
+
+iex> x = 5
+5
+</code></pre>
+</section>
+
+<section>
+        <h2>Pattern Matching</h2>
+        <pre><code data-trim>
+# ^ before a variable prevents rebinding
+iex> {x, y} = {1,2}
+{1, 2}
+
+iex> {^x, y} = {2,2}
+** (MatchError) no match of right hand side value: {2, 2}
+
+# Use _ if you don't want to bind part of the match
+iex> {x, _} = {1,2}
+{1, 2}
+</code></pre>
+</section>
+
+<section>
+    <h2>Pattern Matching in Functions</h2>
+    <pre><code data-trim>
+iex> defmodule Math do
+...>   def fact(0) do 1 end
+...>   def fact(n) do n * fact(n-1) end
+...> end
+{:module, Math, <<70, 79, 82, 49, 0, 0, 4, 124, 66, 69, 65, ...>>,
+ {:fact, 1}}
+
+iex> Math.fact(5)
+120
+
+iex> Math.fact(25)
+15511210043330985984000000
+   </code></pre>
+</section>
+
+<section>
+    <h2>Processes and Messages</h2>
+    <pre><code data-trim>
+iex> defmodule Greeter do
+...>   def loop do
+...>     receive do
+...>       {sender, name} -> send sender, {:ok, "Hello, #{name}"}
+...>                         loop
+...>       :quit -> IO.puts "Bye bye"
+...>     end
+...>   end
+...> end
+{:module, Greeter, <<70, 79, 82, 49, 0, 0, 5, 236, 66, ...>>, {:loop, 0}}
+
+iex> pid=spawn(Greeter, :loop, [])
+#PID<0.304.0>
+iex> send pid, {self, "Josh"}
+iex> flush
+{:ok, "Hello, Josh"}
+:ok
+   </code></pre>
+</section>
+
+<section>
+    <h2>GenServer</h2>
+<ul><li><code>spawn/3, send/2, receive</code> usually not used directly</li>
+    <li>Elixir wraps these with <code>GenServer</code> (uses the Erlang <code>gen_server</code>)</li>
+    <li>Features:</li>
+    <ul><li>Message handling via callbacks</li>
+        <li>Automatic process name registration</li>
+        <li>Help with process supervision</li>
+        <li>Hot code update</li>
+    </ul>
+    <li>Part of the OTP Framework from Erlang</li>
+</ul>
+</section>
 <section>
         <h2>Clever Quotes</h2>
         <p>
@@ -333,27 +400,6 @@ console.log( '"customevent" has fired' );
                 &ldquo;For years there has been a theory that millions of monkeys typing at random on millions of typewriters would
                 reproduce the entire works of Shakespeare. The Internet has proven this theory to be untrue.&rdquo;
         </blockquote>
-</section>
-
-<section>
-        <h2>Pretty Code</h2>
-        <pre><code data-trim contenteditable>
-function linkify( selector ) {
-if( supports3DTransforms ) {
-
-var nodes = document.querySelectorAll( selector );
-
-for( var i = 0, len = nodes.length; i &lt; len; i++ ) {
-var node = nodes[i];
-
-if( !node.className ) {
-node.className += ' roll';
-}
-}
-}
-}
-        </code></pre>
-        <p>Courtesy of <a href="http://softwaremaniacs.org/soft/highlight/en/description/">highlight.js</a>.</p>
 </section>
 
 <section>
