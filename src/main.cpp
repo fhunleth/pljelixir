@@ -1,14 +1,14 @@
 #include <QApplication>
 #include <QWebView>
 
-#include "ErlangConsole.h"
+#include "ErlWebView.h"
 #include "ConsoleWidget.h"
 #include "SwitcherWidget.h"
 #include "KeyHandler.h"
 #include "DtachClient.h"
 
 // Uncomment to test standalone (i.e. not being called from Erlang)
-#define TEST
+//#define TEST
 
 int main(int argc, char *argv[])
 {
@@ -22,7 +22,7 @@ int main(int argc, char *argv[])
 
 //    c->printPrompt();
 #else
-    ErlangConsole erlangConsole(c, webView);
+    ErlWebView erlWebView(webView);
 #endif
 
     SwitcherWidget switcher;

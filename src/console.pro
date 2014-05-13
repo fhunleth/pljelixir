@@ -7,19 +7,19 @@ TEMPLATE = app
 
 SOURCES += main.cpp\
     Erlcmd.cpp \
-    ErlangConsole.cpp \
     ConsoleWidget.cpp \
     SwitcherWidget.cpp \
     KeyHandler.cpp \
-    DtachClient.cpp
+    DtachClient.cpp \
+    ErlWebView.cpp
 
 HEADERS  += \
     Erlcmd.h \
-    ErlangConsole.h \
     ConsoleWidget.h \
     SwitcherWidget.h \
     KeyHandler.h \
-    DtachClient.h
+    DtachClient.h \
+    ErlWebView.h
 
 FORMS    +=
 

@@ -20,7 +20,7 @@ ConsoleWidget::ConsoleWidget(QWidget *parent) :
     connect(client_, SIGNAL(dataReceived(QByteArray)), SLOT(dataReceived(QByteArray)));
     connect(client_, SIGNAL(error()), SLOT(error()));
 
-    client_->attach("/tmp/myiex");
+    client_->attach("/tmp/iex_prompt");
 
     setOverwriteMode(true);
 }
@@ -261,6 +261,16 @@ void ConsoleWidget::keyPressEvent(QKeyEvent *e)
     case Qt::Key_End:
         ansi = "\eOF";
         break;
+    case Qt::Key_Backspace:
+        ansi = "\b";
+        break;
+    case Qt::Key_Return:
+    case Qt::Key_Enter:
+        ansi = "\n";
+        break;
+    case Qt::Key_Tab:
+        ansi = "\t";
+        break;
 
     case Qt::Key_PageUp:
         verticalScrollBar()->setValue(verticalScrollBar()->value() - verticalScrollBar()->pageStep());
@@ -283,93 +293,6 @@ void ConsoleWidget::keyPressEvent(QKeyEvent *e)
 
     if (!ansi.isEmpty())
         client_->sendData(ansi);
-
-#if 0
-    case Qt::Key_Return:
-    case Qt::Key_Enter:
-        e->accept();
-
-        if (isOnEditLine()) {
-            command_.append(currentCommand());
-            if (e->modifiers() & Qt::ControlModifier) {
-                // Ctrl-Enter sends to command to Elixir
-                emit inputReceived(command_);
-                command_.clear();
-                textCursor().insertBlock();
-            } else
-                printPrompt();
-        } else {
-            // Move to the end.
-            moveCursor(QTextCursor::End);
-        }
-        break;
-
-    case Qt::Key_Backspace:
-        e->accept();printError
-
-        if (isOnEditLine()) {
-            if (textCursor().columnNumber() > promptColumnNumber_)
-                textCursor().deletePreviousChar();
-        } else {
-            // Move to the end.
-            moveCursor(QTextCursor::End);
-        }
-        break;
-
-    case Qt::Key_Delete:
-        e->accept();
-
-        if (isOnEditLine()) {
-            textCursor().deleteChar();
-        } else {
-            // Move to the end.
-            moveCursor(QTextCursor::End);
-        }
-        break;
-
-        // Navigation and selection keys to pass on to QTextEdit
-    case Qt::Key_Insert:
-    case Qt::Key_Alt:
-    case Qt::Key_Shift:
-    case Qt::Key_Control:
-    case Qt::Key_Left:
-    case Qt::Key_Right:
-    case Qt::Key_Up:
-    case Qt::Key_Down:
-    case Qt::Key_End:
-    case Qt::Key_PageDown:
-    case Qt::Key_PageUp:
-        QTextEdit::keyPressEvent(e);
-        break;
-
-    case Qt::Key_Home:
-        e->accept();
-        if (isOnEditLine()) {
-            moveCursor(QTextCursor::StartOfLine);
-            for (int i = 0; i < promptColumnNumber_; i++)
-                moveCursor(QTextCursor::NextCharacter);
-        } else
-            moveCursor(QTextCursor::StartOfLine);
-        break;
-
-    case Qt::Key_C:
-        if (e->modifiers() & Qt::ControlModifier) {
-            reset();
-            e->accept();
-            break;
-        }
-        // else fall through
-    default:
-        if (isOnEditLine())
-            QTextEdit::keyPressEvent(e);
-        else {
-            e->accept();
-            moveCursor(QTextCursor::End);
-            insertPlainText(e->text());
-        }
-        break;
-
-#endif
 }
 
 void ConsoleWidget::mousePressEvent(QMouseEvent *e)

@@ -28,8 +28,6 @@ defmodule ConsoleServer do
     port = Port.open({:spawn_executable, executable},
     [{:packet, 2}, :use_stdio, :binary])
     state = %State{port: port}
-    cast_port(state, :prompt, [])
-    cast_port(state, :set_url, [home()])
     { :ok, state }
   end
 
@@ -43,7 +41,8 @@ defmodule ConsoleServer do
 
   def handle_info({_, {:data, message}}, state) do
     msg = :erlang.binary_to_term(message)
-    handle_port(msg, state)
+    IO.puts "Unexpected message: " <> inspect(msg)
+    {:noreply, state}
   end
 
   # Private helper functions
@@ -61,23 +60,7 @@ defmodule ConsoleServer do
     end
   end
 
-  defp handle_port({:input, input}, state) do
-    try do
-      {rc, newbindings} = Code.eval_string(input, state.bindings)
-      newstate = %{state | bindings: newbindings}
-      cast_port(state, :rc, [inspect rc])
-      cast_port(state, :prompt, [])
-      {:noreply, newstate}
-    catch
-      kind, reason ->
-        cast_port(state, :error, ["** (#{kind}) #{inspect reason}"]) #  "(#{err}) #{msg}")
-        cast_port(state, :prompt, [])
-        {:noreply, state}
-    end
-  end
-
   defp home do
     list_to_bitstring('file://' ++ :code.priv_dir(:pljelixir) ++ '/html/index.html')
   end
-
 end
