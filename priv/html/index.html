@@ -168,7 +168,19 @@ iex> [?H, ?e, ?l, ?l, ?o, ?, , ? , ?E, ?r, ?l, ?a, ?n, ?g]
     </section>
 
     <section>
-        <h2>Key-value Types</h2>
+        <h2>Naming</h2>
+        <ul><li>Functions start with a lowercase letter</li>
+            <li>Modules start with an uppercase letter</li>
+            <li>Function naming conventions:</li>
+            <ul><li>Words separated with underscores</li>
+                <li>A "?" means the function returns true or false</li>
+                <li>An "!" means the function throws an exception on error</li>
+            </ul>
+        </ul>
+    </section>
+
+    <section>
+        <h2>Key-value Containers</h2>
         <pre><code data-trim>
 # This is a keyword list. It is used in function calls.
 iex> x=[{:apple, 1}, {:banana, 2}]
@@ -189,7 +201,7 @@ iex> %{mymap | :apple => 0}
     </section>
 
     <section>
-        <h2>The Dict interface</h2>
+        <h2>The Dict Interface</h2>
         <ul><li>All dictionary-like things implement the <code>Dict</code> interface</li>
             <li>Works for keyword lists and maps</li>
             <li><code>HashDict</code> also implements the interface and supports bigger dictionaries</li></ul>
