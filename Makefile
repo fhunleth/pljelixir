@@ -1,36 +1,26 @@
-# Variables to override
-#
-# CC            C compiler
-# CROSSCOMPILE	crosscompiler prefix, if any
-# CFLAGS	compiler flags for compiling all C files
-# ERL_CFLAGS	additional compiler flags for files using Erlang header files
-# ERL_EI_LIBDIR path to libei.a and liberl_interface.a
-# LDFLAGS	linker flags for linking all binaries
-# ERL_LDFLAGS	additional linker flags for projects referencing Erlang libraries
-# MIX		path to mix
+TOPDIR := $(shell pwd)
+NERVES_VERSION = 0def35b534fd82f665556002e0c543d9b487551e
+NERVES_URL = https://github.com/nerves-project/nerves-sdk.git
+NERVES_RESULT = _nerves/buildroot/output/images/rootfs.tar
 
-#ifeq ($(NERVES_ROOT),)
-#    $(error Remember to source nerves-env.sh before building)
-#endif
+-include _nerves/nerves.mk
 
-EILOC:=$(shell find /usr/local/lib/erlang /usr/lib/erlang -name ei.h -printf '%h\n' 2> /dev/null | head -1)
-ERL_CFLAGS ?= -I/usr/local/include -I$(EILOC) -I/usr/lib/erlang/usr/include/
-
-ERL_EI_LIBDIR ?= /usr/lib/erlang/usr/lib
-ERL_LDFLAGS ?= -L$(ERL_EI_LIBDIR) -lerl_interface -lei
-
-LDFLAGS += -lpthread
-CFLAGS ?= -O2 -Wall -Wextra -Wno-unused-parameter
-CC ?= $(CROSSCOMPILER)gcc
-MIX ?= mix
-ERL_LIB = $(NERVES_SDK_SYSROOT)/usr/lib/erlang/lib
 ELX_LIB = $(NERVES_SDK_ROOT)/usr/lib/elixir/lib
-REL2FW = $(NERVES_ROOT)/scripts/rel2fw.sh
-QMAKE ?= qmake
 
 all: firmware
 
-deps: mix.exs
+_nerves:
+	git clone $(NERVES_URL) _nerves
+
+.PRECIOUS: _nerves/nerves.mk
+_nerves/nerves.mk $(NERVES_RESULT): _nerves $(TOPDIR)/config/nerves/nerves_defconfig
+	cd _nerves && git fetch && git checkout $(NERVES_VERSION)
+	ln -fs $(TOPDIR)/config/nerves/nerves_defconfig _nerves/configs/nerves_defconfig
+	$(MAKE) -C _nerves nerves_defconfig
+	$(MAKE) -C _nerves
+	touch _nerves/nerves.mk
+
+deps: mix.exs $(NERVES_RESULT)
 	$(MIX) deps.get
 	# touch the deps folder so that we skip this step on
 	# the next build
@@ -40,25 +30,24 @@ compile: deps
 	$(MIX) compile
 
 release: compile
-	relx --system_libs $(ERL_LIB) -l $(ELX_LIB)
+	$(RELX) -l $(ELX_LIB)
 
 firmware: release
 	$(REL2FW) _rel
 
 src/Makefile:
-	cd src && $(QMAKE) -after "target.path=../priv" "LIBS+=-L$(ERL_EI_LIBDIR)" "INCLUDEPATH+=$(EILOC)" console.pro
+	cd src && $(NERVES_HOST_MAKE_ENV) qmake -after "target.path=../priv" "LIBS+=-L$(ERL_EI_LIBDIR)" "INCLUDEPATH+=$(ERL_INTERFACE_DIR)" console.pro
 
 compile_port: src/Makefile
 	+$(MAKE) -C src install
 
 clean:
+	[ ! -e $(NERVES_RESULT) ] || ($(MIX) clean)
 	[ ! -e src/Makefile ] || $(MAKE) -C src clean
-	$(MIX) clean 
 	-rm -fr _build _rel _images src/Makefile
 
-distclean: clean
-	-rm -fr ebin deps 
-
 realclean: distclean
+distclean:
+	-rm -fr _build _rel _images src/Makefile src/*.o ebin deps _nerves
 
-.PHONY: all firmware compile compile_port clean distclean realclean
+.PHONY: all firmware nerves compile compile_port clean distclean realclean

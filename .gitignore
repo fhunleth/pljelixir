@@ -8,3 +8,4 @@ priv/console
 _build
 _images
 _rel
+_nerves
