@@ -1,5 +1,5 @@
 TOPDIR := $(shell pwd)
-NERVES_VERSION = 0def35b534fd82f665556002e0c543d9b487551e
+NERVES_VERSION = 343af08126bb302feabd00ddf8bc2eda97a15117
 NERVES_URL = https://github.com/nerves-project/nerves-sdk.git
 NERVES_RESULT = _nerves/buildroot/output/images/rootfs.tar
 
@@ -48,6 +48,6 @@ clean:
 
 realclean: distclean
 distclean:
-	-rm -fr _build _rel _images src/Makefile src/*.o ebin deps _nerves
+	-rm -fr ebin deps _nerves _build _rel _images src/Makefile src/*.o src/qrc_* src/ui_*
 
 .PHONY: all firmware nerves compile compile_port clean distclean realclean
