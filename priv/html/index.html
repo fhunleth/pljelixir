@@ -461,16 +461,76 @@ iex> flush
     <li>Part of the OTP Framework from Erlang</li>
 </ul>
 </section>
+
 <section>
-        <h2>Clever Quotes</h2>
-        <p>
-                These guys come in two forms, inline: <q cite="http://searchservervirtualization.techtarget.com/definition/Our-Favorite-Technology-Quotations">
-                &ldquo;The nice thing about standards is that there are so many to choose from&rdquo;</q> and block:
-        </p>
-        <blockquote cite="http://searchservervirtualization.techtarget.com/definition/Our-Favorite-Technology-Quotations">
-                &ldquo;For years there has been a theory that millions of monkeys typing at random on millions of typewriters would
-                reproduce the entire works of Shakespeare. The Internet has proven this theory to be untrue.&rdquo;
-        </blockquote>
+        <h2>GPIO Outputs</h2>
+        <pre><code data-trim>
+iex> Gpio.start_link(23, :output)
+{:ok, #PID<0.96.0>}
+
+iex> Gpio.write(23, 1)
+:ok
+
+iex> Gpio.write(23, 0)
+:ok
+
+# The not functional way of blinking
+iex> for i <- 1..5 do
+...>   Gpio.write(23, 1)
+...>   :timer.sleep 500
+...>   Gpio.write(23, 0)
+...>   :timer.sleep 500
+...> end
+</code></pre>
+</section>
+
+<section>
+        <h2>GPIO Inputs</h2>
+        <pre><code data-trim>
+iex> Gpio.start_link(17, :input)
+{:ok, #PID<0.115.0>}
+
+iex> Gpio.read(17)
+0
+
+# Press button
+iex> Gpio.read(17)
+1
+</code></pre>
+</section>
+
+<section>
+<!-- Need picture showing condition -->
+<h2>GPIO Interrupts</h2>
+<pre><code data-trim>
+iex> Gpio.start_link(17, :input)
+{:ok, #PID<0.188.0>}
+
+iex> Gpio.set_int(17, :both)
+:ok
+
+# Press button
+iex> flush
+{:gpio_interrupt, 17, :falling}
+{:gpio_interrupt, 17, :rising}
+{:gpio_interrupt, 17, :falling}
+</code></pre>
+</section>
+
+<section>
+        <h2>Erlang Distribution</h2>
+        <pre><code data-trim>
+# On another computer
+$ iex --sname me --cookie democookie --remsh demo@nerves
+Erlang/OTP 17 [erts-6.0] [source-07b8f44] [64-bit] [smp:8:8] [async-threads:10] [kernel-poll:false]
+Interactive Elixir (0.13.2) - press Ctrl+C to exit (type h() ENTER for help)
+
+iex(demo@nerves)1> Gpio.write 23, 1
+:ok
+
+iex(demo@nerves)2> Gpio.write 23, 0
+:ok
+</code></pre>
 </section>
 
 <section>

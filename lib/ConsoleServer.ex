@@ -28,6 +28,7 @@ defmodule ConsoleServer do
     port = Port.open({:spawn_executable, executable},
     [{:packet, 2}, :use_stdio, :binary])
     state = %State{port: port}
+    cast_port(state, :set_url, [home()])
     { :ok, state }
   end
 

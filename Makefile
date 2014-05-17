@@ -27,6 +27,7 @@ deps: mix.exs $(NERVES_RESULT)
 	touch deps
 
 compile: deps
+	$(MIX) deps.compile
 	$(MIX) compile
 
 release: compile
@@ -36,7 +37,7 @@ firmware: release
 	$(REL2FW) _rel
 
 src/Makefile:
-	cd src && $(NERVES_HOST_MAKE_ENV) qmake -after "target.path=../priv" "LIBS+=-L$(ERL_EI_LIBDIR)" "INCLUDEPATH+=$(ERL_INTERFACE_DIR)" console.pro
+	cd src && $(NERVES_HOST_MAKE_ENV) qmake -after "target.path=../priv" "LIBS+=-L$(ERL_EI_LIBDIR)" "INCLUDEPATH+=$(ERL_INTERFACE_DIR)/include" console.pro
 
 compile_port: src/Makefile
 	+$(MAKE) -C src install

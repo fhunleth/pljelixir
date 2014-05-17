@@ -31,7 +31,7 @@ void ErlWebView::handleMessage(ETERMPtr msg)
         QUrl url(QString::fromUtf8((const char *) ERL_BIN_PTR(eurl), ERL_BIN_SIZE(eurl)));
         webView_->setUrl(url);
     } else {
-        resp = erl_format("error");
+        resp = erl_format((char*) "error");
     }
 
     if (resp) {
