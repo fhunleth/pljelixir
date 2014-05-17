@@ -1,4 +1,4 @@
-%{"elixir_ale": {:git, "git://github.com/fhunleth/elixir_ale.git", "a5ec8d8d8fbaac45e99fa20c4f4011eaf8e7cab8", []},
+%{"elixir_ale": {:git, "git://github.com/fhunleth/elixir_ale.git", "dfc9408f52bcef2196ca177932a1e889f3a56f56", [tag: "master"]},
   "exlager": {:git, "git://github.com/khia/exlager.git", "d3d73b2a3d0f7b8f3da11a02b5f9384da6c62110", []},
   "goldrush": {:git, "git://github.com/DeadZen/goldrush.git", "71e63212f12c25827e0c1b4198d37d5d018a7fec", [tag: "0.1.6"]},
   "l2elog": {:git, "git://github.com/fhunleth/l2elog.git", "99b2d76c5fc5ff798dfa7179aa92901aa3c09dc4", []},

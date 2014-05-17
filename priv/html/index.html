@@ -463,6 +463,20 @@ iex> flush
 </section>
 
 <section>
+    <h2>Hardware - Erlang Demo Board</h2>
+    <ul><li>Open hardware demo board by Omer Kilic</li>
+        <li>Connects to Raspberry Pi's expansion port</li>
+        <li>Supports GPIO, PWM, I2C, and SPI interfaces</li>
+    </ul>
+    <img width="400" src="demo-board.jpg" alt="uhoh">
+</section>
+
+<section>
+    <h2>GPIO</h2>
+    <img width="400" src="schematic-gpio.png" alt="uhoh">
+</section>
+
+<section>
         <h2>GPIO Outputs</h2>
         <pre><code data-trim>
 iex> Gpio.start_link(23, :output)
@@ -530,6 +544,59 @@ iex(demo@nerves)1> Gpio.write 23, 1
 
 iex(demo@nerves)2> Gpio.write 23, 0
 :ok
+</code></pre>
+</section>
+
+<section>
+    <h2>SPI Bus</h2>
+    <img width="640" src="schematic-adc.png" alt="uhoh">
+</section>
+
+<section>
+    <h2>Analog to Digital Converter</h2>
+    <img width="640" src="mcp3002-protocol.png" alt="uhoh">
+</section>
+
+<section>
+    <h2>SPI Bus - Potentiometer</h2>
+    <pre><code data-trim>
+# Load the driver
+iex> :os.cmd('modprobe spi-bcm2708')
+
+# Start the SPI process (bus 0, chip select 0)
+iex> Spi.start_link(:"spidev0.0")
+{:ok, #PID<0.104.0>}
+
+# Get the value from the potentiometer (channel 1 on MCP3002)
+iex> result = Spi.transfer(:"spidev0.0", <<0x74, 0x00>>)
+<<1, 219>>
+
+iex> <<_::[size(4)], counts::[size(12)]>> = result
+<<1, 219>>
+
+iex> volts = counts / 1024 * 3.3
+1.5082031249999999
+</code></pre>
+</section>
+
+<section>
+    <h2>SPI Bus - Thermometer</h2>
+    <pre><code data-trim>
+# Get the value from the thermometer (channel 0 on MCP3002)
+iex> result = Spi.transfer(:"spidev0.0", <<0x64, 0x00>>)
+<<0, 212>>
+
+iex> <<_::[size(4)], counts::[size(12)]>> = result
+<<0, 212>>
+
+iex> volts = counts / 1024 * 3.3
+0.6832031249999999
+
+iex> celsius = 25 + 100 * (volts - 0.7)
+23.320312499999996
+
+iex> farenheit = 32 + celsius * 9 / 5
+73.9765625
 </code></pre>
 </section>
 
