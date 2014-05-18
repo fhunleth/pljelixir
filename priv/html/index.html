@@ -50,16 +50,16 @@
             <li>F2 - Enlarge IEx font size</li>
             <li>F3 - Reduce IEx font size</li>
             <li>F5 - Reload presentation</li>
-            <li>Right arrow - Next slide</li>
-            <li>Left arrow - Previous slide</li>
+            <li>Arrow keys - Slide navigation</li>
+            <li>Esc - Don't press. Super SLOW!</li>
         </ul>
         </p>
         <p>
-            Note: if focus is lost in the presentation, hit F5
+            Note: if focus is lost in the presentation, hit F5, and use #iex:break if in trouble at the shell
         </p>
     </section>
     <section>
-        <h1>Elixir on the RPi</h1>
+        <h1>Intro to Elixir on the Raspberry Pi</h1>
         <h3>MoCo Programming Junkies 5/19/14</h3>
         <small>
             <p>
@@ -74,7 +74,7 @@
         <ul>
             <li>Motivating Elixir and the Erlang VM</li>
             <li>Intro to Elixir</li>
-            <li>Hacking the Raspberry Pi</li>
+            <li>Interacting with Hardware on the RPi</li>
             <li>How this presentation was made</li>
         </ul>
     </section>
@@ -332,6 +332,18 @@ Hello, Frank!
 </section>
 
 <section>
+        <h2>Anonymous Functions</h2>
+        <pre><code data-trim>
+iex> greeter = fn(name) ->IO.puts("Hello, #{name}!" end
+#Function<6.106461118/1 in :erl_eval.expr/5>
+
+iex> greeter.("Frank")
+Hello, Frank!
+:ok
+</code></pre>
+</section>
+
+<section>
         <h2>The Best Function in the World</h2>
         <pre><code data-trim>
 iex> h
@@ -394,10 +406,10 @@ iex> x = 5
 <section>
         <h2>Pattern Matching</h2>
         <pre><code data-trim>
-# ^ before a variable prevents rebinding
 iex> {x, y} = {1,2}
 {1, 2}
 
+# ^ before a variable prevents rebinding
 iex> {^x, y} = {2,2}
 ** (MatchError) no match of right hand side value: {2, 2}
 
@@ -425,6 +437,44 @@ iex> Math.fact(25)
    </code></pre>
 </section>
 
+<section>
+    <h2>Control flow</h2>
+    <pre><code data-trim>
+iex> x = 4
+4
+
+iex> if x < 5 do
+...>   "Yes"
+...> else
+...>   "No"
+...> end
+Yes
+
+# When you have multiple if conditions to check
+iex> cond do
+...>   x == 1 -> "one"
+...>   x == 2 -> "two"
+...>   x == 4 -> "four"
+...> end
+"four"
+</code></pre>
+</section>
+
+<section>
+    <h2>Pattern Matching Version</h2>
+    <ul><li>Sometimes it's useful to pattern match inside functions</li>
+        <li>Patterns can be fairly complicated</li>
+        <li>Binding supported</li>
+        </ul>
+    <pre><code data-trim>
+iex> case x do
+...>   1 -> "one"
+...>   2 -> "two"
+...>   value -> "Got a #{value}"
+...> end
+"Got a 4"
+</code></pre>
+</section>
 <section>
     <h2>Processes and Messages</h2>
     <pre><code data-trim>
@@ -601,39 +651,32 @@ iex> farenheit = 32 + celsius * 9 / 5
 </section>
 
 <section>
-        <section id="fragments">
-                <h2>Fragmented Views</h2>
-                <p>Hit the next arrow...</p>
-                <p class="fragment">... to step through ...</p>
-                <ol>
-                        <li class="fragment"><code>any type</code></li>
-                        <li class="fragment"><em>of view</em></li>
-                        <li class="fragment"><strong>fragments</strong></li>
-                </ol>
-
-        </section>
-        <section>
-                <h2>Fragment Styles</h2>
-                <p>There's a few styles of fragments, like:</p>
-                <p class="fragment grow">grow</p>
-                <p class="fragment shrink">shrink</p>
-                <p class="fragment roll-in">roll-in</p>
-                <p class="fragment fade-out">fade-out</p>
-                <p class="fragment highlight-red">highlight-red</p>
-                <p class="fragment highlight-green">highlight-green</p>
-                <p class="fragment highlight-blue">highlight-blue</p>
-                <p class="fragment current-visible">current-visible</p>
-                <p class="fragment highlight-current-blue">highlight-current-blue</p>
-        </section>
+    <h2>How The Presentation Was Built</h2>
+    <ul><li>Nerves</li>
+        <ul><li>Overall packaging of the Linux kernel, libraries, and programs</li>
+            <li>Focused on Erlang and Elixir embedded applications</li>
+            </ul>
+        <li>Qt</li>
+        <ul><li>Webkit-based browser for showing the slides</li>
+            <li>GUI widget for building the VT100 emulator for IEx</li>
+            </ul>
+        <li>dtach - redirects the IEx prompt through Unix pipes so Qt can access it</li>
+        <li>reveal.js - presentation framework</li>
+    </ul>
 </section>
 
-<section>
-        <h2>Spectacular image!</h2>
-        <a class="image" href="http://lab.hakim.se/meny/" target="_blank">
-                <img width="320" height="299" src="http://s3.amazonaws.com/hakim-static/portfolio/images/meny.png" alt="Meny">
-        </a>
-</section>
+    <section>
+        <h1>Intro to Elixir on the Raspberry Pi</h1>
+        <h3>MoCo Programming Junkies 5/19/14</h3>
+        <small>
+            <p>
+            Frank Hunleth<br/>
+            <a href="http://twitter.com/fhunleth">@fhunleth</a>
+            </p>
+        </small>
+    </section>
 
+<!--
 <section>
         <h2>Export to PDF</h2>
         <p>Presentations can be <a href="https://github.com/hakimel/reveal.js#pdf-export">exported to PDF</a>, below is an example that's been uploaded to SlideShare.</p>
@@ -642,7 +685,7 @@ iex> farenheit = 32 + celsius * 9 / 5
                 document.getElementById('slideshare').attributeName = 'allowfullscreen';
         </script>
 </section>
-
+-->
 
     </div>
 

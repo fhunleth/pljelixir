@@ -1,4 +1,4 @@
-defmodule ConsoleServer do
+defmodule Slides do
   use GenServer.Behaviour
 
   defmodule State do
@@ -18,8 +18,13 @@ defmodule ConsoleServer do
     :gen_server.cast __MODULE__, {:set_url, url}
   end
 
-  def goto_home do
-    set_url(home())
+  def first do
+    set_url(base_url())
+  end
+
+  # Go to the specified slide number.
+  def goto(number) do
+    set_url(base_url() <> integer_to_binary(number))
   end
 
   # gen_server callbacks
@@ -28,7 +33,7 @@ defmodule ConsoleServer do
     port = Port.open({:spawn_executable, executable},
     [{:packet, 2}, :use_stdio, :binary])
     state = %State{port: port}
-    cast_port(state, :set_url, [home()])
+    cast_port(state, :set_url, [base_url()])
     { :ok, state }
   end
 
@@ -61,7 +66,7 @@ defmodule ConsoleServer do
     end
   end
 
-  defp home do
-    list_to_bitstring('file://' ++ :code.priv_dir(:pljelixir) ++ '/html/index.html')
+  defp base_url do
+    list_to_bitstring('file://' ++ :code.priv_dir(:pljelixir) ++ '/html/index.html#/')
   end
 end
