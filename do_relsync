@@ -1,0 +1,1 @@
+~/nerves/relsync/relsync -d demo@nerves -q /tmp/erlang -s relsync -c democookie
