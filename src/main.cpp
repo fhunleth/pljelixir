@@ -18,16 +18,14 @@ int main(int argc, char *argv[])
 
     ConsoleWidget *c = new ConsoleWidget();
 #ifdef TEST
-    webView->setUrl(QUrl("file:///home/fhunleth/experiments/webtest/web/index.html"));
-
-//    c->printPrompt();
+    webView->setUrl(QUrl("file:///home/fhunleth/experiments/pljelixir/priv/html/index.html"));
 #else
     ErlWebView erlWebView(webView);
 #endif
 
     SwitcherWidget switcher;
-    switcher.addWidget(webView);
-    switcher.addWidget(c);
+    switcher.setFullscreenWidget(webView);
+    switcher.setOverlayWidget(c);
     switcher.setMinimumSize(800, 600);
     switcher.show();
 

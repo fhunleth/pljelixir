@@ -7,10 +7,14 @@
 
 #include <ctype.h>
 
+#define ALPHA 240
+#define stringify(x) #x
+
 ConsoleWidget::ConsoleWidget(QWidget *parent) :
     QTextEdit(parent)
 {
-    setStyleSheet("background-color: black; color: white; font-family: DejaVu Sans Mono");
+    QString stylesheet = QString("background-color: rgb(0,0,0,%1); color: white; font-family: DejaVu Sans Mono").arg(ALPHA);
+    setStyleSheet(stylesheet);
 
     ansiBg_ = 0;
     ansiFg_ = 7;
@@ -59,7 +63,11 @@ void ConsoleWidget::flushBuffer()
     if (!buffer_.isEmpty()) {
 
         QTextCharFormat format;
-        format.setBackground(ansiToColor(inverse_ ? ansiFg_ : ansiBg_));
+        QColor bg = ansiToColor(inverse_ ? ansiFg_ : ansiBg_);
+        if (bg == QColor(0, 0, 0))
+            format.clearBackground();
+        else
+            format.setBackground(bg);
         format.setForeground(ansiToColor(inverse_ ? ansiBg_ : ansiFg_));
 
         QString text = QString::fromUtf8(buffer_);

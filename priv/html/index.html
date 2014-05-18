@@ -44,19 +44,18 @@
     <div class="slides">
     <section>
         <h2>Controls</h2>
-        <p>
-        <ul>
-            <li>F1 - Toggle between presentation and IEx</li>
-            <li>F2 - Enlarge IEx font size</li>
-            <li>F3 - Reduce IEx font size</li>
-            <li>F5 - Reload presentation</li>
-            <li>Arrow keys - Slide navigation</li>
-            <li>Esc - Don't press. Super SLOW!</li>
+        <ul><li>Keys (when running on the RPi)</li>
+            <ul><li>F1 - Toggle between presentation and IEx</li>
+                <li>F2/F3 - Enlarge/reduce IEx font size</li>
+                <li>F5 - Reload presentation</li>
+                <li>Arrow keys - Slide navigation</li>
+            </ul>
+            <li>Notes</li>
+            <ul><li>If focus is lost in the presentation, hit F5</li>
+                <li>Use <code>#iex:break</code> if in trouble in shell</li>
+                <li><code>Slides.goto(slide_number)</code></li>
+            </ul>
         </ul>
-        </p>
-        <p>
-            Note: if focus is lost in the presentation, hit F5, and use #iex:break if in trouble at the shell
-        </p>
     </section>
     <section>
         <h1>Intro to Elixir on the Raspberry Pi</h1>
@@ -660,6 +659,7 @@ iex> farenheit = 32 + celsius * 9 / 5
         <ul><li>Webkit-based browser for showing the slides</li>
             <li>GUI widget for building the VT100 emulator for IEx</li>
             </ul>
+        <li>Elixir-ALE - GPIO/SPI/I2C interface</li>
         <li>dtach - redirects the IEx prompt through Unix pipes so Qt can access it</li>
         <li>reveal.js - presentation framework</li>
     </ul>
@@ -676,17 +676,6 @@ iex> farenheit = 32 + celsius * 9 / 5
         </small>
     </section>
 
-<!--
-<section>
-        <h2>Export to PDF</h2>
-        <p>Presentations can be <a href="https://github.com/hakimel/reveal.js#pdf-export">exported to PDF</a>, below is an example that's been uploaded to SlideShare.</p>
-        <iframe id="slideshare" src="http://www.slideshare.net/slideshow/embed_code/13872948" width="455" height="356" style="margin:0;overflow:hidden;border:1px solid #CCC;border-width:1px 1px 0;margin-bottom:5px" allowfullscreen> </iframe>
-        <script>
-                document.getElementById('slideshare').attributeName = 'allowfullscreen';
-        </script>
-</section>
--->
-
     </div>
 
     </div>
@@ -699,25 +688,25 @@ iex> farenheit = 32 + celsius * 9 / 5
         // Full list of configuration options available here:
         // https://github.com/hakimel/reveal.js#configuration
         Reveal.initialize({
-        controls: true,
-        progress: true,
-        history: true,
-        center: true,
-        transition: 'none',
+            controls: false,
+            progress: false,
+            slideNumber: true,
+            history: true,
+            center: false,
+            touch: false,
+            overview: false, // Super slow on Raspberry Pi
+            embedded: true,
+            transition: 'none',
 
-        // Parallax scrolling
-        // parallaxBackgroundImage: 'https://s3.amazonaws.com/hakim-static/reveal-js/reveal-parallax-1.jpg',
-        // parallaxBackgroundSize: '2100px 900px',
-
-        // Optional libraries used to extend on reveal.js
-        dependencies: [
-                { src: 'lib/js/classList.js', condition: function() { return !document.body.classList; } },
-                { src: 'plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
-                { src: 'plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+            // Optional libraries used to extend on reveal.js
+            dependencies: [
+//                { src: 'lib/js/classList.js', condition: function() { return !document.body.classList; } },
+//                { src: 'plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+//                { src: 'plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
                 { src: 'plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
-                { src: 'plugin/zoom-js/zoom.js', async: true, condition: function() { return !!document.body.classList; } },
-                { src: 'plugin/notes/notes.js', async: true, condition: function() { return !!document.body.classList; } }
-        ]
+//                { src: 'plugin/zoom-js/zoom.js', async: true, condition: function() { return !!document.body.classList; } },
+//                { src: 'plugin/notes/notes.js', async: true, condition: function() { return !!document.body.classList; } }
+            ]
         });
 
     </script>

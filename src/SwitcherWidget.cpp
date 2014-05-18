@@ -4,51 +4,53 @@
 
 SwitcherWidget::SwitcherWidget(QWidget *parent) :
     QWidget(parent),
-    index_(-1)
+    fullscreen_(0),
+    overlay_(0),
+    overlayActive_(false)
 {
 }
 
-void SwitcherWidget::addWidget(QWidget *child)
+void SwitcherWidget::setFullscreenWidget(QWidget *w)
 {
-    // Hide the currently visible widget, since the new
-    // one will be the active one now.
-    if (index_ >= 0)
-        widgets_.at(index_)->setVisible(false);
+    fullscreen_ = w;
 
-    child->setParent(this);
-    child->setGeometry(0, 0, size().width(), size().height());
-    widgets_.append(child);
-    child->setVisible(true);
-    child->setFocus();
+    w->setParent(this);
+    w->setGeometry(0, 0, size().width(), size().height());
+    w->setVisible(true);
+    w->setFocus();
+}
 
-    // The most recently added widget is the new top one now.
-    index_++;
+void SwitcherWidget::setOverlayWidget(QWidget *overlay)
+{
+    overlay_ = overlay;
+    overlay->setParent(this);
+
+    int w = size().width();
+    int h = size().height();
+
+    overlay->setGeometry(0, h * 3 / 10, w, h * 7 / 10);
+    overlay->setVisible(false);
 }
 
 void SwitcherWidget::toggle()
 {
-    if (index_ < 0)
-        return;
-
-    // Hide the old one
-    widgets_.at(index_)->setVisible(false);
-
-    index_++;
-    if (index_ >= widgets_.count())
-        index_ = 0;
-
-    // Show the new one
-    widgets_.at(index_)->setVisible(true);
-
+    overlayActive_ = !overlayActive_;
     forceFocus();
 }
 
 void SwitcherWidget::forceFocus()
 {
-    QWidget *top = widgets_.at(index_);
-    top->raise();
-    top->setFocus();
+    if (!overlay_ || !fullscreen_)
+        return;
 
+    if (overlayActive_) {
+        overlay_->setVisible(true);
+        overlay_->raise();
+        overlay_->setFocus();
+    } else {
+        overlay_->setVisible(false);
+        fullscreen_->setFocus();
+    }
 }
 
 void SwitcherWidget::resizeEvent(QResizeEvent *e)
@@ -56,7 +58,10 @@ void SwitcherWidget::resizeEvent(QResizeEvent *e)
     int w = e->size().width();
     int h = e->size().height();
 
-    foreach (QWidget *child, widgets_)
-        child->setGeometry(0, 0, w, h);
+    if (fullscreen_)
+        fullscreen_->setGeometry(0, 0, w, h);
+
+    if (overlay_)
+        overlay_->setGeometry(0, h * 3 / 10, w, h * 7 / 10);
 }
 

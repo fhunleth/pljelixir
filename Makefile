@@ -1,5 +1,5 @@
 TOPDIR := $(shell pwd)
-NERVES_VERSION = 343af08126bb302feabd00ddf8bc2eda97a15117
+NERVES_VERSION = faefc7bcabd213808013a19d2a75d59601407b12
 NERVES_URL = https://github.com/nerves-project/nerves-sdk.git
 NERVES_RESULT = _nerves/buildroot/output/images/rootfs.tar
 

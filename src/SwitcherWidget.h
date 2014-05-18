@@ -9,7 +9,9 @@ class SwitcherWidget : public QWidget
 public:
     explicit SwitcherWidget(QWidget *parent = 0);
 
-    void addWidget(QWidget *child);
+    void setFullscreenWidget(QWidget *w);
+    void setOverlayWidget(QWidget *overlay);
+
     void toggle();
     void forceFocus();
 
@@ -17,8 +19,10 @@ protected:
     void resizeEvent(QResizeEvent *);
 
 private:
-    QList<QWidget*> widgets_;
-    int index_;
+    QWidget *fullscreen_;
+    QWidget *overlay_;
+
+    bool overlayActive_;
 };
 
 #endif // SWITCHERWIDGET_H
