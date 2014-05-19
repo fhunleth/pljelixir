@@ -24,6 +24,10 @@
 #hdmi_group=1
 #hdmi_mode=1
 
+# uncomment for 1024x768x60
+#hdmi_group=2
+#hdmi_mode=16
+
 # uncomment to force a HDMI mode rather than DVI. This can make audio work in
 # DMT (computer monitor) modes
 #hdmi_drive=2
@@ -32,8 +36,7 @@
 # no display
 #config_hdmi_boost=4
 
-# uncomment for composite PAL
-#sdtv_mode=2
+#hdmi_ignore_edid=0xa5000080
 
 #uncomment to overclock the arm. 700 MHz is the default.
 arm_freq=1000

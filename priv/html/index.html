@@ -57,6 +57,15 @@
             </ul>
         </ul>
     </section>
+
+    <section>
+        <h2>Annoucements</h2>
+        <ul><li>Elixir study group forming in DC</li>
+            <li>Polyglot Programming DC Meetup - June 4, Chinatown</li>
+            <li>Speaker needed for next meeting</li>
+        </ul>
+    </section>
+
     <section>
         <h1>Intro to Elixir on the Raspberry Pi</h1>
         <h3>MoCo Programming Junkies 5/19/14</h3>
@@ -610,7 +619,7 @@ iex(demo@nerves)2> Gpio.write 23, 0
     <h2>SPI Bus - Potentiometer</h2>
     <pre><code data-trim>
 # Load the driver
-iex> :os.cmd('modprobe spi-bcm2708')
+iex> System.cmd("modprobe spi-bcm2708")
 
 # Start the SPI process (bus 0, chip select 0)
 iex> Spi.start_link(:"spidev0.0")
