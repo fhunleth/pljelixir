@@ -249,9 +249,9 @@ iex> [?H, ?e, ?l, ?l, ?o, ?, , ? , ?E, ?r, ?l, ?a, ?n, ?g]
     <section>
         <h2>Key-value Containers</h2>
         <pre><code data-trim>
-# This is a keyword list. It is used in function calls.
+# This is a keyword list. Note the syntactic sugar that's also valid.
 iex> x=[{:apple, 1}, {:banana, 2}]
-[akey: 1, bkey, 2]
+[apple: 1, banana, 2]
 iex> Keyword.get(x, :apple)
 1
 iex> Keyword.put(x, :banana, 0)
