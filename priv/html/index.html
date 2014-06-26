@@ -631,7 +631,7 @@ iex> result = Spi.transfer(pid, <<0x74, 0x00>>)
 iex> <<_::[size(4)], counts::[size(12)]>> = result
 <<1, 219>>
 
-iex> volts = counts / 1024 * 3.3
+iex> volts = counts / 1023 * 3.3
 1.5082031249999999
 </code></pre>
 </section>
@@ -646,7 +646,7 @@ iex> result = Spi.transfer(pid, <<0x64, 0x00>>)
 iex> <<_::[size(4)], counts::[size(12)]>> = result
 <<0, 212>>
 
-iex> volts = counts / 1024 * 3.3
+iex> volts = counts / 1023 * 3.3
 0.6832031249999999
 
 iex> celsius = 25 + 100 * (volts - 0.7)
