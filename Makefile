@@ -49,6 +49,6 @@ clean:
 
 realclean: distclean
 distclean:
-	-rm -fr ebin deps _nerves _build _rel _images src/Makefile src/*.o src/qrc_* src/ui_*
+	-rm -fr ebin deps _nerves _build _rel _images src/Makefile src/*.o src/qrc_* src/ui_* src/moc_*
 
 .PHONY: all firmware nerves compile compile_port clean distclean realclean
