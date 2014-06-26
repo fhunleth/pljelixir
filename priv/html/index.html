@@ -537,20 +537,19 @@ iex> flush
 <section>
         <h2>GPIO Outputs</h2>
         <pre><code data-trim>
-iex> Gpio.start_link(23, :output)
+iex> {:ok, pid} = Gpio.start_link(23, :output)
 {:ok, #PID<0.96.0>}
 
-iex> Gpio.write(23, 1)
+iex> Gpio.write(pid, 1)
 :ok
 
-iex> Gpio.write(23, 0)
+iex> Gpio.write(pid, 0)
 :ok
 
-# The not functional way of blinking
-iex> for i <- 1..5 do
-...>   Gpio.write(23, 1)
+iex> Enum.each 1..5, fn(_x) ->
+...>   Gpio.write(pid, 1)
 ...>   :timer.sleep 500
-...>   Gpio.write(23, 0)
+...>   Gpio.write(pid, 0)
 ...>   :timer.sleep 500
 ...> end
 </code></pre>
@@ -559,14 +558,14 @@ iex> for i <- 1..5 do
 <section>
         <h2>GPIO Inputs</h2>
         <pre><code data-trim>
-iex> Gpio.start_link(17, :input)
+iex> {:ok, pid} = Gpio.start_link(17, :input)
 {:ok, #PID<0.115.0>}
 
-iex> Gpio.read(17)
+iex> Gpio.read(pid)
 0
 
 # Press button
-iex> Gpio.read(17)
+iex> Gpio.read(pid)
 1
 </code></pre>
 </section>
@@ -575,10 +574,10 @@ iex> Gpio.read(17)
 <!-- Need picture showing condition -->
 <h2>GPIO Interrupts</h2>
 <pre><code data-trim>
-iex> Gpio.start_link(17, :input)
+iex> {:ok, pid} = Gpio.start_link(17, :input)
 {:ok, #PID<0.188.0>}
 
-iex> Gpio.set_int(17, :both)
+iex> Gpio.set_int(pid, :both)
 :ok
 
 # Press button
@@ -589,7 +588,7 @@ iex> flush
 </code></pre>
 </section>
 
-<section>
+<!-- section>
         <h2>Erlang Distribution</h2>
         <pre><code data-trim>
 # On another computer
@@ -603,7 +602,7 @@ iex(demo@nerves)1> Gpio.write 23, 1
 iex(demo@nerves)2> Gpio.write 23, 0
 :ok
 </code></pre>
-</section>
+</section -->
 
 <section>
     <h2>SPI Bus</h2>
@@ -622,11 +621,11 @@ iex(demo@nerves)2> Gpio.write 23, 0
 iex> System.cmd("modprobe spi-bcm2708")
 
 # Start the SPI process (bus 0, chip select 0)
-iex> Spi.start_link(:"spidev0.0")
+iex> {:ok, pid} = Spi.start_link("spidev0.0")
 {:ok, #PID<0.104.0>}
 
 # Get the value from the potentiometer (channel 1 on MCP3002)
-iex> result = Spi.transfer(:"spidev0.0", <<0x74, 0x00>>)
+iex> result = Spi.transfer(pid, <<0x74, 0x00>>)
 <<1, 219>>
 
 iex> <<_::[size(4)], counts::[size(12)]>> = result
@@ -641,7 +640,7 @@ iex> volts = counts / 1024 * 3.3
     <h2>SPI Bus - Thermometer</h2>
     <pre><code data-trim>
 # Get the value from the thermometer (channel 0 on MCP3002)
-iex> result = Spi.transfer(:"spidev0.0", <<0x64, 0x00>>)
+iex> result = Spi.transfer(pid, <<0x64, 0x00>>)
 <<0, 212>>
 
 iex> <<_::[size(4)], counts::[size(12)]>> = result

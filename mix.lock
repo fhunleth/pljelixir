@@ -1,5 +1,5 @@
-%{"elixir_ale": {:git, "git://github.com/fhunleth/elixir_ale.git", "d4a8bfe8496ea5a7206ddc2061ed8e28897bea1f", [tag: "master"]},
-  "exlager": {:git, "git://github.com/khia/exlager.git", "d3d73b2a3d0f7b8f3da11a02b5f9384da6c62110", []},
+%{"elixir_ale": {:git, "git://github.com/fhunleth/elixir_ale.git", "84e0dadb07d2d13022a1949caaa8c1f5e7fbfc8c", [tag: "master"]},
+  "exlager": {:git, "git://github.com/khia/exlager.git", "99eb3fb763ae546edfe2ac3dd181987a4872dfcc", []},
   "goldrush": {:git, "git://github.com/DeadZen/goldrush.git", "71e63212f12c25827e0c1b4198d37d5d018a7fec", [tag: "0.1.6"]},
   "l2elog": {:git, "git://github.com/fhunleth/l2elog.git", "99b2d76c5fc5ff798dfa7179aa92901aa3c09dc4", []},
   "lager": {:git, "git://github.com/basho/lager.git", "b6b6cebcb27ccff8acc59ae775acebc2f52e4926", [tag: "2.0.3"]}}

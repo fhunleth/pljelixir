@@ -1,5 +1,5 @@
 defmodule Slides do
-  use GenServer.Behaviour
+  use GenServer
 
   defmodule State do
     defstruct port: nil, bindings: []
@@ -7,15 +7,15 @@ defmodule Slides do
 
   # Public API
   def start_link do
-    :gen_server.start_link({:local, __MODULE__}, __MODULE__, [], [])
+    GenServer.start_link(__MODULE__, [], name: __MODULE__)
   end
 
   def stop do
-    :gen_server.cast __MODULE__, :stop
+    GenServer.cast __MODULE__, :stop
   end
 
   def set_url(url) do
-    :gen_server.cast __MODULE__, {:set_url, url}
+    GenServer.cast __MODULE__, {:set_url, url}
   end
 
   def first do
@@ -24,7 +24,7 @@ defmodule Slides do
 
   # Go to the specified slide number.
   def goto(number) do
-    set_url(base_url() <> integer_to_binary(number))
+    set_url(base_url() <> Integer.to_string(number))
   end
 
   # gen_server callbacks
@@ -67,6 +67,6 @@ defmodule Slides do
   end
 
   defp base_url do
-    list_to_bitstring('file://' ++ :code.priv_dir(:pljelixir) ++ '/html/index.html#/')
+    List.to_string('file://' ++ :code.priv_dir(:pljelixir) ++ '/html/index.html#/')
   end
 end

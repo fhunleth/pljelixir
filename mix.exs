@@ -2,7 +2,7 @@ defmodule Mix.Tasks.Compile.Pljelixir do
   @shortdoc "Compiles C code"
 
   def run(_) do
-    Mix.shell.info System.cmd("make compile_port")
+    0=Mix.Shell.IO.cmd("make compile_port")
   end
 end
 
@@ -12,7 +12,7 @@ defmodule Pljelixir.Mixfile do
   def project do
     [app: :pljelixir,
      version: "0.0.1",
-     elixir: "~> 0.13.0",
+     elixir: "~> 0.14.0",
      compilers: [:Pljelixir, :elixir, :app],
      deps: deps]
   end
