@@ -1,5 +1,5 @@
 TOPDIR := $(shell pwd)
-NERVES_VERSION = ce70f405618b41d0f10ea4e1bfa8f5bbfd31d925
+NERVES_VERSION = 04f5dc01bd17d8ce658915edaaa3009273afc83b
 NERVES_URL = https://github.com/nerves-project/nerves-sdk.git
 NERVES_RESULT = _nerves/buildroot/output/images/rootfs.tar
 
@@ -28,7 +28,7 @@ deps: mix.exs $(NERVES_RESULT)
 
 compile: deps
 	$(MIX) deps.compile
-	$(MIX) compile
+	MIX_ENV=prod $(MIX) do compile, compile.protocols
 
 release: compile
 	$(RELX) -l $(ELX_LIB)
